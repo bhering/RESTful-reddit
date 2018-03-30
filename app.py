@@ -1,10 +1,18 @@
 #!flask/bin/python
+
 import click
 from flask import Flask, jsonify
 from info import info
+import os
+import sqlite3
+
 
 app = Flask(__name__)
-app.config['JSON_SORT_KEYS']=False
+app.config.update({
+	'JSON_SORT_KEYS':False,
+	'DATABASE':os.path.join(app.instance_path, 'poney.db'),
+})
+
 
 @app.cli.command()
 def initdb():
