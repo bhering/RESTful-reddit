@@ -3,7 +3,7 @@ An API done as a test, it saves some data from reddit's own API and serves it sl
 
 ### How to kick it off
 
-Pretty standard stuff: get yourself [pip](https://pip.pypa.io/en/stable/) and a [virtual env](https://docs.python.org/3/library/venv.html), activate it and run `$ pip install -r requirements.txt`.
+Pretty standard stuff: get yourself python3, [pip](https://pip.pypa.io/en/stable/) and a [virtual env](https://docs.python.org/3/library/venv.html), activate it and run `$ pip install -r requirements.txt`.
 
 After that you can run the commands in the Procfile to start the debug server:
 
