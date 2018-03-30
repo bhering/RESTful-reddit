@@ -1,9 +1,15 @@
 #!flask/bin/python
+import click
 from flask import Flask, jsonify
 from info import info
 
 app = Flask(__name__)
 app.config['JSON_SORT_KEYS']=False
+
+@app.cli.command()
+def initdb():
+    """Initialize the database."""
+    click.echo('Init the db')
 
 @app.route('/')
 def index():
