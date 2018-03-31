@@ -7,7 +7,6 @@ from   flask import Flask, g, jsonify, request
 from   info import info
 import os
 import sqlite3
-import time
 
 
 ### app instantiation ###
@@ -53,9 +52,9 @@ def posts_endpoint():
 	db=get_db()
 	query='select title, author from posts '
 	if request.args.get('start_date'):
-		st=time.mktime(datetime.strptime(
+		st=datetime.strptime(
 		request.args.get('start_date'),
-		"%d-%m-%Y").timetuple())
+		"%d-%m-%Y").timestamp()
 		return jsonify({'result':st})
 	else:
 		return jsonify(request.values)
