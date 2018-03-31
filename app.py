@@ -58,22 +58,30 @@ def get_timestamp(date,dateformat="%d-%m-%Y"):
 @app.route('/posts/', methods=['GET'])
 def posts_endpoint():
 	db=get_db()
-	query='select title, author, ups, num_comments from posts '
+	query='select title, author, ups, num_comments from post '
 
-	date_constraint=[]
+	constraints=[]
 	start_date=request.args.get('start_date')
 	end_date=request.args.get('end_date')
 	order=request.args.get('order')
 
 	if start_date:
-		date_constraint.append(
+		constraints.append(
 			'timestamp > '+str(get_timestamp(start_date)))
 
 	if end_date:
-		date_constraint.append(
+		constraints.append(
 			'timestamp < '+str(get_timestamp(end_date)))
 
-	return jsonify({'date_constraints':' and '.join(date_constraint)})
+	if len(constraints) > 0:
+		query+='where '+' and '.join(constraints)
+
+	if order=='ups':
+		query+=' order by ups desc'
+	elif order=='comments':
+		query+=' order by num_comments desc'
+
+	return jsonify({'date_constraints':query})
 
 ### error handling ###
 
@@ -105,4 +113,4 @@ def close_db(error):
 ### just in case ###
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
