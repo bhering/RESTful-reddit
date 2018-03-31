@@ -2,7 +2,7 @@
 
 # imports here
 import click
-from flask import Flask, g, jsonify
+from flask import Flask, g, jsonify, request
 from info import info
 import os
 import sqlite3
@@ -46,6 +46,10 @@ def get_db():
 def index():
     return jsonify(info)
 
+@app.route('/post/', methods=['GET'])
+def post_endpoint():
+	click.echo(request)
+	return jsonify(request.values)
 
 ### error handling ###
 
