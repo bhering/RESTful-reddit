@@ -3,7 +3,7 @@
 # imports here
 import click
 from   datetime import datetime
-from   flask import Flask, g, jsonify, request
+from   flask import abort, Flask, g, jsonify, request
 from   info import info
 import os
 import sqlite3
@@ -47,17 +47,33 @@ def get_db():
 def index():
     return jsonify(info)
 
+# this is not the best place to put this
+# the function returns based on localtime
+def get_timestamp(date,dateformat="%d-%m-%Y"):
+	try:
+		return datetime.strptime(date,dateformat).timestamp()
+	except ValueError:
+		abort(400)
+
 @app.route('/posts/', methods=['GET'])
 def posts_endpoint():
 	db=get_db()
-	query='select title, author from posts '
-	if request.args.get('start_date'):
-		st=datetime.strptime(
-		request.args.get('start_date'),
-		"%d-%m-%Y").timestamp()
-		return jsonify({'result':st})
-	else:
-		return jsonify(request.values)
+	query='select title, author, ups, num_comments from posts '
+
+	date_constraint=[]
+	start_date=request.args.get('start_date')
+	end_date=request.args.get('end_date')
+	order=request.args.get('order')
+
+	if start_date:
+		date_constraint.append(
+			'timestamp > '+str(get_timestamp(start_date)))
+
+	if end_date:
+		date_constraint.append(
+			'timestamp < '+str(get_timestamp(end_date)))
+
+	return jsonify({'date_constraints':' and '.join(date_constraint)})
 
 ### error handling ###
 
