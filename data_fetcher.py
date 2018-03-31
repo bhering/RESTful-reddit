@@ -1,6 +1,6 @@
 import http.client
 import json
-from pprint import pprint
+import sqlite3
 
 def do_fetch(rest_arg='/r/artificial/hot'):
 	conn = http.client.HTTPSConnection("api.reddit.com")
@@ -23,17 +23,29 @@ def extract_posts(data):
 	posts=posts['data']['children']
 	for post in posts:
 		post_data=post['data']
-		yield 	{
-					'title':post_data['title'],
-					'author':post_data['author'],
-					'timestamp':post_data['created_utc'],
-					'ups':post_data['ups'],
-					'downs':post_data['downs'],
-					'num_comments':post_data['num_comments'],
-				}
+		yield 	[
+					post_data['title'],
+					post_data['author'],
+					post_data['created_utc'],
+					post_data['ups'],
+					post_data['downs'],
+					post_data['num_comments'],
+				]
+
+# there should be a more elegant way than this, but for now, this is what i'm using
+def db_handler(data, db_url='./posts.db'):
+	db=sqlite3.connect(db_url)
+	db.row_factory=sqlite3.Row
+	for d in data:
+		db.execute(
+		'insert into post (title, author, timestamp, ups, downs, num_comments)'+
+		' values (?, ?, ?, ?, ?, ?)', d )
+	db.commit()
+	db.close()
+
+def job():
+	db_handler(extract_posts(do_fetch()))
 
 
 if __name__=="__main__":
-	raw_data=do_fetch()
-	posts=[post for post in extract_posts(raw_data)]
-	pprint(posts)
+	job()
