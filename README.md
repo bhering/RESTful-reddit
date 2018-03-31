@@ -24,3 +24,9 @@ After that, there is a data fetching module aptly named [data_fetcher.py](./data
 A little warning is due: the handling of unexpected parameters is non-existant at this time, and behavior may be unpredictable if you stray from the hour:minute format.
 
 The script has to be running continuously in order for it to work.
+
+### Usage
+
+By default, the server will be running on `http://localhost:8000`. The API has two endpoints currently:
+> `/posts` with the GET query parameters `start_date=DD-MM-YYYY`, `end_date=DD-MM-YYYY` and `order=<order>` - which can be `ups` or `comments`
+> `/authors` with the single GET parameter `order=<order>` - which can also be `ups` or `comments`
