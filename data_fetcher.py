@@ -1,6 +1,9 @@
 import http.client
 import json
+import schedule
 import sqlite3
+from sys import argv
+import time
 
 def do_fetch(rest_arg='/r/artificial/hot'):
 	conn = http.client.HTTPSConnection("api.reddit.com")
@@ -48,4 +51,12 @@ def job():
 
 
 if __name__=="__main__":
-	job()
+	if len(argv) < 2:
+		job()
+
+	else:
+		# while i'm using this API i could totally do a cron job instead
+		schedule.every().day.at(argv[1]).do(job)
+		while True:
+			schedule.run_pending()
+			time.sleep(60)
