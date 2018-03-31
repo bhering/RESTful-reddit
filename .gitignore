@@ -1,3 +1,6 @@
+# do not commit the database
+*.db
+
 # not sure what this is but eh
 *.swp
 
