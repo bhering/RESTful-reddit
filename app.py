@@ -81,7 +81,10 @@ def posts_endpoint():
 	elif order=='comments':
 		query+=' order by num_comments desc'
 
-	return jsonify({'date_constraints':query})
+	return jsonify([
+		{'title':t,'author':a,'ups':u,'comments':c}
+		for t,a,u,c in db.execute(query)
+	])
 
 ### error handling ###
 
