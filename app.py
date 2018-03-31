@@ -86,6 +86,28 @@ def posts_endpoint():
 		for t,a,u,c in db.execute(query)
 	])
 
+
+@app.route('/authors/', methods=['GET'])
+def authors_endpoint():
+	db=get_db()
+	query='select author,'+\
+			' sum(ups) as total_ups,'+\
+			' sum(num_comments) as total_comments'+\
+			' from post'+\
+			' group by author'
+
+	order=request.args.get('order')
+
+	if order=='ups':
+		query+=' order by ups desc'
+	elif order=='comments':
+		query+=' order by num_comments desc'
+
+	return jsonify([
+		{'author':a,'total_ups':u,'total_comments':c}
+		for a,u,c in db.execute(query)
+	])
+
 ### error handling ###
 
 @app.errorhandler(404)
