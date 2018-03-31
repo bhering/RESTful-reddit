@@ -30,7 +30,6 @@ def init_db():
 ### database stuff ###
 
 def connect_db():
-	print(app.config)
 	r=sqlite3.connect(app.config['DATABASE'])
 	r.row_factory=sqlite3.Row
 	return r
