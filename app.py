@@ -2,10 +2,12 @@
 
 # imports here
 import click
-from flask import Flask, g, jsonify, request
-from info import info
+from   datetime import datetime
+from   flask import Flask, g, jsonify, request
+from   info import info
 import os
 import sqlite3
+import time
 
 
 ### app instantiation ###
@@ -46,10 +48,17 @@ def get_db():
 def index():
     return jsonify(info)
 
-@app.route('/post/', methods=['GET'])
-def post_endpoint():
-	click.echo(request)
-	return jsonify(request.values)
+@app.route('/posts/', methods=['GET'])
+def posts_endpoint():
+	db=get_db()
+	query='select title, author from posts '
+	if request.args.get('start_date'):
+		st=time.mktime(datetime.strptime(
+		request.args.get('start_date'),
+		"%d-%m-%Y").timetuple())
+		return jsonify({'result':st})
+	else:
+		return jsonify(request.values)
 
 ### error handling ###
 
@@ -58,9 +67,17 @@ def page_not_found(error):
 	return jsonify(
 	{
 		'error':'this end point is not yet implemented',
-		'code':404
+		'code':error.code,
 	})
 
+
+@app.errorhandler(400)
+def bad_request(error):
+	return jsonify(
+	{
+		'error':'double check the query parameters',
+		'code':error.code,
+	})
 
 ### teardown ###
 
