@@ -39,6 +39,8 @@ Examples: `http://localhost:5000/posts/?start_date=01-01-2018&end_date=31-03-201
 
 Generalizing which subreddits to sample from, and also swtiching from using the sqlite3 library to SQLAlchemy so it can be plugged into any type of DB.
 
+Also, obviously, this needs to be split into more files than the monolytic app.py, eventually.
+
 ### tl;dr
 
 With python at least version 3.6, and virtualenv installed...
